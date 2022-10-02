@@ -1,0 +1,74 @@
+plugins {
+    id "nu.studer.jooq" version "7.1.1"
+    id "java"
+}
+
+group "com.effective.java"
+version "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+def jooqVersion = "3.16.5"
+def junitVersion = "5.8.2"
+
+dependencies {
+    // jooq
+    implementation "org.jooq:jooq:$jooqVersion"
+    implementation "org.jooq:jooq-meta:$jooqVersion"
+    implementation "org.jooq:jooq-codegen:$jooqVersion"
+
+    // PostgreSQL
+    implementation "org.postgresql:postgresql:42.3.4"
+    jooqGenerator "org.postgresql:postgresql:42.3.4"
+
+    // Logging
+    implementation "org.slf4j:slf4j-api:1.7.36"
+    implementation "ch.qos.logback:logback-core:1.2.11"
+    implementation "ch.qos.logback:logback-classic:1.2.11"
+
+    // jUnit
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jooq {
+    //version = "3.16.5"
+
+    configurations {
+        main {
+            generationTool {
+                logging = org.jooq.meta.jaxb.Logging.WARN
+                jdbc {
+                    driver = "org.postgresql.Driver"
+                    url = "jdbc:postgresql://localhost:5432/postgres"
+                    user = "postgres"
+                    password = "password"
+                }
+                generator {
+                    name = "org.jooq.codegen.DefaultGenerator"
+                    database {
+                        name = "org.jooq.meta.postgres.PostgresDatabase"
+                        inputSchema = "public"
+                    }
+                    generate {
+                        deprecated = false
+                        records = false
+                        immutablePojos = false
+                        fluentSetters = false
+                    }
+                    target {
+                        packageName = "com.effective.java.jooq"
+                        directory = "build/generated"
+                    }
+                    strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
+                }
+            }
+        }
+    }
+}

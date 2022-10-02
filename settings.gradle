@@ -1,0 +1,5 @@
+rootProject.name = 'effective-java'
+
+include "vanilla"
+include "grpc"
+include "java19"
