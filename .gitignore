@@ -1,4 +1,9 @@
-# Gradlety5
+# IDE
+.idea
+*.iml
+
+# Gradle
 build
 out
 .gradle
+
